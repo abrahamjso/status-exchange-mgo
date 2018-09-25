@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 // Self Libraries
-const StatusExchangeCodes = require('./statusExchangeCode');
+const StatusExchangeCodes = require('./statusExchangeCodes');
 // Constants
 
 // Main

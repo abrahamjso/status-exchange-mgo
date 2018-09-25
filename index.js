@@ -1,8 +1,8 @@
 // Self Libraries
 const statusExchange = require('./src/statusExchange');
-const statusExchangeCode = require('./src/statusExchangeCode');
+const statusExchangeCodes = require('./src/statusExchangeCodes');
 
 module.exports = {
   statusExchange,
-  statusExchangeCode,
+  statusExchangeCodes,
 };

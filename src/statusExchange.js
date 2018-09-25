@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 // Self Libraries
 const StatusExchange = require('./statusExchangeSchema');
-const StatusExchangeCodes = require('./statusExchangeCode');
+const StatusExchangeCodes = require('./statusExchangeCodes');
 
 // Constants
 let isConnected = false;
