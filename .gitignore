@@ -1,0 +1,13 @@
+# package directories
+node_modules
+jspm_packages
+
+# OSX
+.DS_Store
+
+# Files
+variables.env
+test.js
+
+# Serverless directories
+.serverless
