@@ -29,26 +29,36 @@ module.exports = (options) => {
   const dbURL = options.urlConnection;
   if (!dbURL) throw new Error('Not urlConnection provided or the urlConnection is invalid');
 
+  // TODO, si el id es el mismo, hay que correr nuevamente la secuencia y no crear uno nuevo
   const db = myMongo(dbURL);
-  const initTransaction = (transactionID) => {
+  const initTransaction = async (transactionID) => {
     // EX0010
-    return new Promise((resolve, reject) => {
+    try {
       const { statusCode } = StatusExchangeCodes.EX0010;
-      db.connectToDatabase()
-        .then(() => {
-          const seObj = new StatusExchange({
-            transactionID,
-            updatedAt: new Date(),
-            history: [{ date: new Date(), status: statusCode }],
-          });
-          seObj.save((err) => {
-            if (err) reject(err);
-            resolve(seObj);
-          });
-        }).catch((err) => {
-          reject(err);
+      await db.connectToDatabase();
+      const se = await StatusExchange.findOne({ transactionID });
+      let obj = null;
+      if (!se) { // if the Status Exchange exists!
+        const seObj = new StatusExchange({
+          transactionID,
+          updatedAt: new Date(),
+          history: [{ date: new Date(), status: statusCode }],
         });
-    });
+        obj = await seObj.save();
+      } else {
+        const update = {
+          status: statusCode,
+          $push: { history: { date: new Date(), status: statusCode } },
+          updatedAt: new Date(),
+        };
+        obj = await StatusExchange.updateOne({ transactionID }, update, { new: true });
+        const theSE = await StatusExchange.findOne({ transactionID });
+        return theSE;
+      }
+      return obj;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const transactionBackupJSON = (transactionID, jsonURL) => {
